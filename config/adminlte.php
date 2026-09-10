@@ -439,8 +439,21 @@ return [
     'rtl' => [
         'enabled' => null,
         'locales' => [
-            'ar', 'arc', 'ckb', 'dv', 'fa', 'ha', 'he', 'khw', 'ks', 'ps',
-            'sd', 'ug', 'ur', 'uz-AF', 'yi',
+            'ar',
+            'arc',
+            'ckb',
+            'dv',
+            'fa',
+            'ha',
+            'he',
+            'khw',
+            'ks',
+            'ps',
+            'sd',
+            'ug',
+            'ur',
+            'uz-AF',
+            'yi',
         ],
     ],
 
@@ -760,103 +773,49 @@ return [
     */
 
     'menu' => [
-        // Navbar items:
+
         [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => true,
-        ],
-        [
-            'type' => 'darkmode-widget',
-            'topnav_right' => true,
-        ],
-        [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
+            'text' => 'Dashboard',
+            'url'  => 'dashboard',
+            'icon' => 'bi bi-speedometer2',
         ],
 
-        // Sidebar items:
         [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
+            'header' => 'PRODUCTS',
         ],
+
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
+            'text' => 'Products',
+            'route' => 'products.list',
+            'icon' => 'bi bi-box-seam',
         ],
+
         [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'bi bi-file-earmark',
-            'label' => 4,
-            'label_color' => 'success',
+            'text' => 'Low Stock',
+            'route' => 'products.lowStock',
+             'icon' => 'bi bi-exclamation-triangle',
         ],
-        ['header' => 'account_settings'],
+
         [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'bi bi-person',
+            'header' => 'CUSTOMERS',
         ],
+
         [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'bi bi-lock',
+            'text' => 'Customers',
+            'route' => 'customer.list',
+            'icon' => 'bi bi-people',
         ],
+
         [
-            'text' => 'multilevel',
-            'icon' => 'bi bi-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-            ],
+            'header' => 'ORDERS',
         ],
-        ['header' => 'labels'],
+
         [
-            'text' => 'important',
-            'icon_color' => 'danger',
-            'url' => '#',
+            'text' => 'All Orders',
+            'route' => 'orders.list',
+            'icon' => 'bi bi-cart',
         ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'warning',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'info',
-            'url' => '#',
-        ],
+
     ],
 
     /*
@@ -914,6 +873,7 @@ return [
                 ],
             ],
         ],
+
         // The Datatables 'Buttons' extension, required by the 'with-buttons'
         // attribute of the datatable component. JSZip powers the excel export
         // and pdfmake the pdf one, drop them when you don't need those.

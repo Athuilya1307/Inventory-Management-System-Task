@@ -41,9 +41,9 @@ class OrderService
                 $quantity = $item['quantity'];
 
                 if ($product->stock < $quantity) {
-                    throw new \Exception(
-                        "Insufficient stock for {$product->name}"
-                    );
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'products' => "Insufficient stock for {$product->name}",
+                    ]);
                 }
 
                 $unitPrice = $product->price;

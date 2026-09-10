@@ -1,59 +1,191 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Store Order & Inventory Mini-System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel-based Store Order & Inventory Management System developed as part of a technical assignment.
 
-## About Laravel
+The system manages products, customers, orders, inventory stock, customer order history, low-stock products, and order confirmation jobs.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* PHP 8.2
+* Laravel 12.69.2
+* MySQL
+* AdminLTE
+* Blade
+* jQuery / AJAX
+* Laravel Queue
+* PHPUnit
+* Eloquent ORM
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
 
-## Learning Laravel
+### Products
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+* View and search products
+* Pagination
+* Display price, tax, and stock
+* Low-stock product detection
+* Configurable low-stock threshold
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Customers
 
-## Laravel Sponsors
+* View and search customers
+* Pagination
+* View customer order history
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Orders
 
-### Premium Partners
+* Create orders for customers
+* Add multiple products
+* Validate available stock
+* Calculate subtotal, tax, and grand total
+* Deduct stock after successful order creation
+* Store order and order-item details
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Queue
 
-## Contributing
+* Dispatch order confirmation job after successful order creation
+* Job simulates sending a confirmation through the queue
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Testing
 
-## Code of Conduct
+Feature tests cover:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+* Successful order creation
+* Insufficient stock
+* Order confirmation job dispatch
 
-## Security Vulnerabilities
+## API Endpoints
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Create Order
 
-## License
+```http
+POST /api/orders
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Example request:
+
+```json
+{
+    "customer_name": "John Doe",
+    "customer_email": "john@example.com",
+    "products": [
+        {
+            "product_id": 1,
+            "quantity": 2
+        }
+    ]
+}
+```
+
+### Customer Order History
+
+```http
+GET /api/customers/{email}/orders
+```
+
+### Low Stock Products
+
+```http
+GET /api/products/low-stock
+```
+
+Custom threshold:
+
+```http
+GET /api/products/low-stock?threshold=10
+```
+
+### Product Details
+
+```http
+GET /api/products/{productId}
+```
+
+## Installation
+
+### 1. Install Dependencies
+
+```bash
+composer install
+```
+
+### 2. Configure Environment
+
+Copy `.env.example` to `.env` and configure the MySQL database.
+
+```bash
+php artisan key:generate
+```
+
+### 3. Run Migrations and Seeders
+
+```bash
+php artisan migrate --seed
+```
+
+### 4. Start the Application
+
+```bash
+php artisan serve
+```
+
+## Queue Worker
+
+Run the queue worker:
+
+```bash
+php artisan queue:work
+```
+
+The order confirmation job is dispatched using `afterCommit()` so it runs only after the order transaction is successfully committed.
+
+## Running Tests
+
+```bash
+php artisan test
+```
+
+Current order tests cover:
+
+* Successful order creation
+* Insufficient stock handling
+* Order confirmation job dispatch
+
+## Design Decisions
+
+### Separate Web and API Routes
+
+* `routes/web.php` is used for frontend page rendering.
+* `routes/api.php` is used for API operations.
+* AJAX is used by the frontend to communicate with the APIs.
+
+### Database Transactions
+
+Order creation is wrapped inside a database transaction so that order creation, order items, and stock deduction succeed or fail together.
+
+### Concurrent Stock Protection
+
+`lockForUpdate()` is used while checking product stock to prevent concurrent orders from overselling inventory.
+
+### Server-Side Calculation
+
+Order subtotal, tax, and grand total are calculated on the server rather than trusting values sent from the frontend.
+
+### Configurable Low Stock
+
+The low-stock API supports a configurable threshold through the `threshold` query parameter.
+
+## Assumptions
+
+* Product code is unique.
+* Customer email is unique.
+* An order must contain at least one product.
+* Stock cannot become negative.
+* Tax is calculated using the product's tax percentage.
+* Low-stock products are products with stock less than or equal to the selected threshold.
+
+## AI Assistance
+
+AI assistance was used during development for understanding Laravel concepts, debugging, code review, test creation, and documentation.
+
+All suggestions were reviewed and tested before being integrated.
